@@ -3,74 +3,35 @@
   "version": "1.0.0",
   "description": "API REST con pipeline CI/CD completo usando GitHub Actions, Docker, Kubernetes y ArgoCD",
   "main": "src/server.js",
-  
-  "_comment_scripts": "Scripts disponibles para ejecutar con 'npm run <script>'",
   "scripts": {
-    "_comment_start": "Inicia el servidor en modo producción",
     "start": "node src/server.js",
-    
-    "_comment_dev": "Inicia el servidor en modo desarrollo con auto-reload (requiere nodemon)",
     "dev": "nodemon src/server.js",
-    
-    "_comment_test": "Ejecuta los tests con Jest y genera informe de cobertura",
     "test": "jest --coverage",
-    
-    "_comment_test_watch": "Ejecuta los tests en modo watch (se re-ejecutan al cambiar código)",
     "test:watch": "jest --watch",
-    
-    "_comment_lint": "Verifica el código con ESLint (detecta errores y problemas de estilo)",
     "lint": "eslint src/**/*.js tests/**/*.js",
-    
-    "_comment_lint_fix": "Ejecuta ESLint y corrige automáticamente los problemas que puede",
     "lint:fix": "eslint src/**/*.js tests/**/*.js --fix"
   },
-  
   "keywords": ["api", "rest", "cicd", "nodejs", "express", "kubernetes", "argocd"],
   "author": "José Pablo Alenza",
   "license": "ISC",
-  
-  "_comment_dependencies": "Dependencias necesarias para ejecutar la aplicación en producción",
   "dependencies": {
-    "_comment_express": "Framework web para Node.js - maneja las rutas y peticiones HTTP",
     "express": "^4.18.2",
-    
-    "_comment_cors": "Permite peticiones desde otros dominios (Cross-Origin Resource Sharing)",
     "cors": "^2.8.5",
-    
-    "_comment_helmet": "Añade headers de seguridad HTTP para proteger la aplicación",
     "helmet": "^7.1.0"
   },
-  
-  "_comment_devDependencies": "Dependencias solo necesarias para desarrollo y testing",
   "devDependencies": {
-    "_comment_jest": "Framework de testing - ejecuta los tests unitarios",
     "jest": "^29.7.0",
-    
-    "_comment_supertest": "Biblioteca para hacer peticiones HTTP de prueba en los tests",
     "supertest": "^6.3.3",
-    
-    "_comment_eslint": "Herramienta de linting - analiza el código en busca de errores",
     "eslint": "^8.56.0",
-    
-    "_comment_nodemon": "Reinicia automáticamente el servidor cuando cambia el código",
     "nodemon": "^3.0.2"
   },
-  
-  "_comment_jest_config": "Configuración de Jest para los tests",
   "jest": {
-    "_comment_testEnvironment": "Entorno de ejecución (node para APIs backend)",
     "testEnvironment": "node",
-    
-    "_comment_coverageDirectory": "Carpeta donde se guarda el informe de cobertura",
     "coverageDirectory": "coverage",
-    
-    "_comment_collectCoverageFrom": "Archivos de los que se debe recoger información de cobertura",
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/server.js"
     ],
-    
-    "_comment_coverageThreshold": "Umbrales mínimos de cobertura (el build falla si no se alcanzan)",
     "coverageThreshold": {
       "global": {
         "branches": 70,

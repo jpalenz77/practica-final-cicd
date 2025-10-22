@@ -1,50 +1,20 @@
 {
-  "_comment": "Configuración de ESLint - Herramienta de linting para JavaScript",
-  "_comment_purpose": "ESLint analiza el código en busca de errores, problemas y inconsistencias de estilo",
-  
-  "_comment_env": "Entornos donde se ejecutará el código - define las variables globales disponibles",
   "env": {
-    "_comment_node": "Habilita variables globales de Node.js (process, require, __dirname, etc.)",
     "node": true,
-    
-    "_comment_es2021": "Habilita sintaxis de ECMAScript 2021 (let, const, arrow functions, async/await, etc.)",
     "es2021": true,
-    
-    "_comment_jest": "Habilita variables globales de Jest (describe, it, expect, test, etc.)",
     "jest": true
   },
-  
-  "_comment_extends": "Conjunto de reglas predefinidas a usar como base",
-  "_comment_eslint_recommended": "Incluye reglas recomendadas por ESLint para detectar errores comunes",
   "extends": "eslint:recommended",
-  
-  "_comment_parserOptions": "Opciones para el parser de JavaScript",
   "parserOptions": {
-    "_comment_ecmaVersion": "Versión de ECMAScript a usar (12 = ES2021)",
     "ecmaVersion": 12,
-    
-    "_comment_sourceType": "Tipo de módulos - 'module' permite import/export, 'script' solo require",
     "sourceType": "module"
   },
-  
-  "_comment_rules": "Reglas personalizadas de linting",
   "rules": {
-    "_comment_indent": "Fuerza indentación de 2 espacios (mejora legibilidad)",
     "indent": ["error", 2],
-    
-    "_comment_linebreak": "Fuerza saltos de línea estilo Unix (LF) en lugar de Windows (CRLF)",
     "linebreak-style": ["error", "unix"],
-    
-    "_comment_quotes": "Fuerza uso de comillas simples ('') en lugar de dobles (\"\")",
     "quotes": ["error", "single"],
-    
-    "_comment_semi": "Obliga a usar punto y coma al final de cada sentencia",
     "semi": ["error", "always"],
-    
-    "_comment_no_unused_vars": "Advierte (no falla) sobre variables declaradas pero no usadas",
     "no-unused-vars": ["warn"],
-    
-    "_comment_no_console": "Permite console.log en desarrollo (útil para debugging)",
     "no-console": "off"
   }
 }
