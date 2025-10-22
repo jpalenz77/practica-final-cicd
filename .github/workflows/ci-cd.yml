@@ -1,120 +1,227 @@
-name: CI/CD Pipeline
+# ============================================
+# Pipeline CI/CD Completo
+# ============================================
+# Este workflow automatiza todo el proceso de integración y despliegue continuo
+# Incluye: tests, análisis de calidad, seguridad y construcción de imágenes Docker
 
+name: 🚀 Pipeline CI/CD
+
+# ============================================
+# Eventos que disparan el pipeline
+# ============================================
 on:
+  # Se ejecuta cuando hay un push a estas ramas
   push:
     branches: [ main, develop ]
+  
+  # Se ejecuta cuando hay un pull request hacia estas ramas
   pull_request:
     branches: [ main, develop ]
 
 jobs:
-  # Job 1: Build y Test
+  # ============================================
+  # JOB 1: Construcción, Tests y Análisis
+  # ============================================
+  # Este job se ejecuta SIEMPRE en todas las ramas
   build-and-test:
-    name: Build and Test
-    runs-on: ubuntu-latest
+    name: 🧪 Construcción, Tests y Análisis de Calidad
+    runs-on: ubuntu-latest  # Máquina virtual Ubuntu más reciente
     
     steps:
-      - name: Checkout code
+      # ----------------------------------------
+      # PASO 1: Descargar el código del repositorio
+      # ----------------------------------------
+      - name: 📥 Descargar código del repositorio
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      # ----------------------------------------
+      # PASO 2: Configurar Node.js versión 18
+      # ----------------------------------------
+      - name: ⚙️ Configurar Node.js 18
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '18'  # Versión de Node.js a utilizar
 
-      - name: Install dependencies
+      # ----------------------------------------
+      # PASO 3: Instalar dependencias del proyecto
+      # ----------------------------------------
+      # npm ci es más rápido y confiable que npm install para CI/CD
+      # porque instala exactamente las versiones del package-lock.json
+      - name: 📦 Instalar dependencias
         run: npm ci
 
-      - name: Run linting
+      # ----------------------------------------
+      # PASO 4: Ejecutar linting (análisis de código)
+      # ----------------------------------------
+      # ESLint verifica que el código siga las reglas de estilo
+      # y detecta errores potenciales
+      - name: 🔍 Ejecutar análisis de código (ESLint)
         run: npm run lint
 
-      - name: Run tests
+      # ----------------------------------------
+      # PASO 5: Ejecutar tests unitarios con cobertura
+      # ----------------------------------------
+      # Jest ejecuta todos los tests y genera un informe de cobertura
+      # que indica qué porcentaje del código está testeado
+      - name: ✅ Ejecutar tests unitarios
         run: npm test
 
-      - name: Upload coverage reports
+      # ----------------------------------------
+      # PASO 6: Subir informe de cobertura como artefacto
+      # ----------------------------------------
+      # El informe se guarda como artefacto descargable en GitHub
+      - name: 📊 Subir informe de cobertura
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
-          path: coverage/
+          name: coverage-report  # Nombre del artefacto
+          path: coverage/        # Carpeta que contiene el informe
 
-      - name: Display coverage summary
+      # ----------------------------------------
+      # PASO 7: Mostrar resumen de cobertura en GitHub
+      # ----------------------------------------
+      # Añade un resumen visual de la cobertura en la página del workflow
+      - name: 📈 Mostrar resumen de cobertura
         run: |
-          echo "### Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Resumen de Cobertura de Tests" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          cat coverage/coverage-summary.txt || echo "No coverage summary found"
+          cat coverage/coverage-summary.txt || echo "No se encontró el resumen de cobertura"
           echo '```' >> $GITHUB_STEP_SUMMARY
 
-      - name: SonarCloud Scan
+      # ----------------------------------------
+      # PASO 8: Análisis estático con SonarCloud
+      # ----------------------------------------
+      # SonarCloud analiza la calidad del código, detecta bugs,
+      # vulnerabilidades y code smells (código con mal olor)
+      - name: 🔬 Análisis de calidad con SonarCloud
         uses: SonarSource/sonarqube-scan-action@v6
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: https://sonarcloud.io
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}         # Token de autenticación
+          SONAR_HOST_URL: https://sonarcloud.io          # URL de SonarCloud
 
-      - name: Run Snyk to check for vulnerabilities
+      # ----------------------------------------
+      # PASO 9: Análisis de vulnerabilidades con Snyk (Test)
+      # ----------------------------------------
+      # Snyk escanea las dependencias en busca de vulnerabilidades conocidas
+      # continue-on-error: true permite que el pipeline continúe aunque encuentre vulnerabilidades
+      - name: 🛡️ Escanear vulnerabilidades con Snyk
         uses: snyk/actions/node@master
-        continue-on-error: true
+        continue-on-error: true  # No falla el pipeline si encuentra vulnerabilidades
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: test
+          command: test  # Comando para analizar vulnerabilidades
           
-      - name: Run Snyk to monitor project
+      # ----------------------------------------
+      # PASO 10: Monitorear proyecto en Snyk
+      # ----------------------------------------
+      # Este comando envía información a Snyk para monitoreo continuo
+      # y recibir alertas de nuevas vulnerabilidades
+      - name: 📡 Enviar proyecto a monitoreo de Snyk
         uses: snyk/actions/node@master
         continue-on-error: true
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          command: monitor
+          command: monitor  # Comando para monitorear el proyecto
 
-  # Job 2: Build Docker (solo en main)
+  # ============================================
+  # JOB 2: Construcción y Publicación de Docker
+  # ============================================
+  # Este job SOLO se ejecuta en la rama 'main' después de un push exitoso
   build-docker:
-    name: Build and Push Docker Image
+    name: 🐳 Construcción y Publicación de Imagen Docker
     runs-on: ubuntu-latest
+    
+    # Este job depende de que build-and-test termine exitosamente
     needs: build-and-test
+    
+    # Solo se ejecuta si:
+    # 1. La rama es 'main'
+    # 2. El evento es un 'push' (no un pull request)
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
     steps:
-      - name: Checkout code
+      # ----------------------------------------
+      # PASO 1: Descargar el código
+      # ----------------------------------------
+      - name: 📥 Descargar código del repositorio
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      # ----------------------------------------
+      # PASO 2: Configurar Docker Buildx
+      # ----------------------------------------
+      # Buildx es una herramienta avanzada de Docker para construir imágenes
+      # con características como multi-plataforma y caché mejorado
+      - name: 🔧 Configurar Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to Docker Hub
+      # ----------------------------------------
+      # PASO 3: Login en Docker Hub
+      # ----------------------------------------
+      # Autenticarse en Docker Hub para poder hacer push de la imagen
+      - name: 🔐 Iniciar sesión en Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}  # Usuario de Docker Hub
+          password: ${{ secrets.DOCKERHUB_TOKEN }}     # Token de acceso
 
-      - name: Extract metadata
+      # ----------------------------------------
+      # PASO 4: Extraer metadatos para las etiquetas
+      # ----------------------------------------
+      # Genera automáticamente las etiquetas (tags) para la imagen Docker
+      # Ejemplo: latest, main-sha-abc123
+      - name: 🏷️ Generar etiquetas para la imagen
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/my-api-cicd
           tags: |
-            type=sha,prefix={{branch}}-
-            type=raw,value=latest
+            type=sha,prefix={{branch}}-    # Tag con el hash del commit
+            type=raw,value=latest          # Tag 'latest'
 
-      - name: Build and push Docker image
+      # ----------------------------------------
+      # PASO 5: Construir y publicar imagen Docker
+      # ----------------------------------------
+      # Construye la imagen usando el Dockerfile y la sube a Docker Hub
+      # Utiliza caché de GitHub Actions para acelerar builds futuros
+      - name: 🏗️ Construir y publicar imagen Docker
         uses: docker/build-push-action@v5
         with:
-          context: .
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          context: .                                    # Usar el directorio actual
+          push: true                                    # Subir la imagen a Docker Hub
+          tags: ${{ steps.meta.outputs.tags }}         # Tags generadas anteriormente
+          labels: ${{ steps.meta.outputs.labels }}     # Etiquetas de metadatos
+          cache-from: type=gha                          # Usar caché de GitHub Actions
+          cache-to: type=gha,mode=max                   # Guardar caché completa
 
-      - name: Test Docker image
+      # ----------------------------------------
+      # PASO 6: Probar la imagen Docker
+      # ----------------------------------------
+      # Descarga la imagen recién publicada y verifica que funcione correctamente
+      - name: 🧪 Probar imagen Docker
         run: |
+          # Descargar la imagen desde Docker Hub
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-api-cicd:latest
+          
+          # Ejecutar contenedor en segundo plano
           docker run -d -p 3000:3000 --name test-container ${{ secrets.DOCKERHUB_USERNAME }}/my-api-cicd:latest
+          
+          # Esperar 5 segundos a que la app se inicie
           sleep 5
+          
+          # Hacer petición al health check - falla si no responde correctamente
           curl -f http://localhost:3000/health || exit 1
+          
+          # Detener y eliminar el contenedor de prueba
           docker stop test-container
           docker rm test-container
 
-      - name: Display build info
+      # ----------------------------------------
+      # PASO 7: Mostrar información del build
+      # ----------------------------------------
+      # Añade un resumen del build exitoso en la página del workflow
+      - name: 📝 Mostrar información del build
         run: |
-          echo "### Docker Build Success ✅" >> $GITHUB_STEP_SUMMARY
-          echo "Image: ${{ secrets.DOCKERHUB_USERNAME }}/my-api-cicd:latest" >> $GITHUB_STEP_SUMMARY
-          echo "SHA: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "### 🐳 Build de Docker Exitoso ✅" >> $GITHUB_STEP_SUMMARY
+          echo "**Imagen:** ${{ secrets.DOCKERHUB_USERNAME }}/my-api-cicd:latest" >> $GITHUB_STEP_SUMMARY
+          echo "**SHA del commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

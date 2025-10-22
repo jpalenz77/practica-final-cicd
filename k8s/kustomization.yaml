@@ -1,13 +1,60 @@
+# ============================================
+# Kustomization - Gestión de Manifiestos K8s
+# ============================================
+# Kustomize permite gestionar y personalizar manifiestos de Kubernetes
+# sin modificar los archivos originales
+
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
+# ============================================
+# Namespace por defecto
+# ============================================
+# Todos los recursos se desplegarán en este namespace
+# a menos que especifiquen otro explícitamente
 namespace: my-api-cicd
 
+# ============================================
+# Recursos a aplicar
+# ============================================
+# Lista de archivos YAML que contienen los recursos de Kubernetes
+# Se aplican en el orden especificado
 resources:
-  - namespace.yaml
-  - deployment.yaml
-  - service.yaml
+  - namespace.yaml               # Primero: Crear el namespace
+  - deployment.yaml              # Segundo: Crear el deployment con los pods
+  - service.yaml                 # Tercero: Crear el service para exponer los pods
 
+# ============================================
+# Etiquetas comunes
+# ============================================
+# Estas etiquetas se añaden automáticamente a TODOS los recursos
+# Útil para identificar recursos gestionados por la misma aplicación
 commonLabels:
-  app: my-api-cicd
-  managed-by: argocd
+  app: my-api-cicd               # Identifica que pertenecen a esta app
+  managed-by: argocd             # Indica que ArgoCD gestiona estos recursos
+
+# ============================================
+# Ventajas de usar Kustomize:
+# ============================================
+# 1. ORGANIZACIÓN: Agrupa todos los manifiestos relacionados
+#
+# 2. REUTILIZACIÓN: Se pueden crear "overlays" para diferentes entornos
+#    Ejemplo: bases comunes + personalizaciones para dev/staging/prod
+#
+# 3. ETIQUETAS AUTOMÁTICAS: Añade etiquetas a todos los recursos
+#
+# 4. TRANSFORMACIONES: Modifica recursos sin cambiar los YAMLs originales
+#
+# 5. INTEGRACIÓN: kubectl tiene soporte nativo con: kubectl apply -k ./
+
+# ============================================
+# Uso:
+# ============================================
+# Aplicar todos los recursos:
+#   kubectl apply -k k8s/
+#
+# Ver qué se va a aplicar (dry-run):
+#   kubectl apply -k k8s/ --dry-run=client
+#
+# Eliminar todos los recursos:
+#   kubectl delete -k k8s/

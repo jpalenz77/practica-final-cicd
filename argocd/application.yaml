@@ -1,32 +1,124 @@
+# ============================================
+# Aplicación de ArgoCD - GitOps
+# ============================================
+# Este archivo define cómo ArgoCD debe desplegar y mantener
+# la aplicación sincronizada con el repositorio Git
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
+
+# ============================================
+# Metadatos de la aplicación
+# ============================================
 metadata:
-  name: my-api-cicd
-  namespace: argocd
+  name: my-api-cicd                           # Nombre de la aplicación en ArgoCD
+  namespace: argocd                           # ArgoCD se ejecuta en su propio namespace
+  
+  # ==========================================
+  # Finalizers
+  # ==========================================
+  # Los finalizers controlan el comportamiento al eliminar la aplicación
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io  # Al eliminar la app, también elimina
+                                              # todos los recursos de Kubernetes
+
+# ============================================
+# Especificación de la aplicación
+# ============================================
 spec:
+  # Proyecto al que pertenece la aplicación
+  # 'default' es el proyecto por defecto de ArgoCD
   project: default
   
+  # ==========================================
+  # SOURCE: Origen de los manifiestos
+  # ==========================================
+  # Define dónde encontrar los manifiestos de Kubernetes
   source:
+    # URL del repositorio Git donde están los manifiestos
     repoURL: https://github.com/jpalenz77/practica-final-cicd
+    
+    # Rama o tag a sincronizar
+    # ArgoCD monitoreará esta rama en busca de cambios
     targetRevision: main
+    
+    # Ruta dentro del repositorio donde están los manifiestos K8s
+    # ArgoCD aplicará todos los archivos YAML en esta carpeta
     path: k8s
   
+  # ==========================================
+  # DESTINATION: Dónde desplegar
+  # ==========================================
+  # Define el cluster y namespace de Kubernetes donde desplegar
   destination:
+    # URL del cluster de Kubernetes
+    # 'kubernetes.default.svc' = cluster local donde corre ArgoCD
     server: https://kubernetes.default.svc
+    
+    # Namespace donde desplegar los recursos
     namespace: my-api-cicd
   
+  # ==========================================
+  # SYNC POLICY: Política de sincronización
+  # ==========================================
+  # Controla cómo y cuándo ArgoCD sincroniza la aplicación
   syncPolicy:
+    # ========================================
+    # Sincronización automática
+    # ========================================
     automated:
+      # PRUNE: Eliminar recursos que ya no están en Git
+      # Si borras un recurso de Git, ArgoCD lo eliminará del cluster
       prune: true
+      
+      # SELF HEAL: Auto-reparación
+      # Si alguien modifica recursos manualmente en el cluster,
+      # ArgoCD los revierte al estado definido en Git
       selfHeal: true
+      
+      # Prevenir sincronización si el directorio está vacío
+      # Protección contra borrados accidentales
       allowEmpty: false
+    
+    # ========================================
+    # Opciones de sincronización
+    # ========================================
     syncOptions:
+      # Crear el namespace automáticamente si no existe
       - CreateNamespace=true
+    
+    # ========================================
+    # Política de reintentos
+    # ========================================
+    # Si la sincronización falla, ArgoCD reintentará automáticamente
     retry:
-      limit: 5
+      limit: 5                    # Máximo 5 reintentos
       backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
+        duration: 5s              # Esperar 5 segundos antes del primer reintento
+        factor: 2                 # Duplicar el tiempo de espera en cada reintento
+                                  # Secuencia: 5s, 10s, 20s, 40s, 80s
+        maxDuration: 3m           # Máximo 3 minutos entre reintentos
+
+# ============================================
+# Flujo de trabajo GitOps con ArgoCD:
+# ============================================
+# 1. DESARROLLADOR: Hace cambios en el código
+# 2. COMMIT: Hace commit y push a GitHub
+# 3. GITHUB ACTIONS: Construye nueva imagen Docker y la sube
+# 4. DESARROLLADOR: Actualiza el tag de imagen en k8s/deployment.yaml
+# 5. COMMIT: Push de los cambios a la rama 'main'
+# 6. ARGOCD: Detecta el cambio en Git (polling cada 3 minutos)
+# 7. ARGOCD: Compara el estado deseado (Git) vs actual (Cluster)
+# 8. ARGOCD: Sincroniza automáticamente (aplica los cambios)
+# 9. KUBERNETES: Hace rolling update de los pods con la nueva imagen
+# 10. RESULTADO: Aplicación actualizada sin downtime
+
+# ============================================
+# Ventajas de este enfoque (GitOps):
+# ============================================
+# ✅ VERSIONADO: Todo el historial de despliegues está en Git
+# ✅ AUDITABILIDAD: Se puede ver quién cambió qué y cuándo
+# ✅ REVERSIÓN FÁCIL: git revert para volver a versión anterior
+# ✅ DECLARATIVO: Defines el estado deseado, no los pasos
+# ✅ AUTOMÁTICO: No necesitas ejecutar kubectl manualmente
+# ✅ SELF-HEALING: Si algo se rompe, ArgoCD lo arregla automáticamente

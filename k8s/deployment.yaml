@@ -1,51 +1,115 @@
+# ============================================
+# Deployment de Kubernetes - Aplicación API
+# ============================================
+# Un Deployment gestiona un conjunto de Pods idénticos
+# y asegura que siempre haya el número deseado ejecutándose
+
 apiVersion: apps/v1
 kind: Deployment
+
+# ============================================
+# Metadatos del Deployment
+# ============================================
 metadata:
-  name: my-api-cicd
-  namespace: my-api-cicd
+  name: my-api-cicd                # Nombre del deployment
+  namespace: my-api-cicd           # Namespace donde se despliega
   labels:
-    app: my-api-cicd
+    app: my-api-cicd               # Etiqueta para identificar el deployment
+
+# ============================================
+# Especificación del Deployment
+# ============================================
 spec:
+  # Número de réplicas (pods) que deben estar ejecutándose
+  # Si un pod falla, Kubernetes creará uno nuevo automáticamente
   replicas: 2
+  
+  # ============================================
+  # Selector de Pods
+  # ============================================
+  # Define qué pods son gestionados por este deployment
   selector:
     matchLabels:
-      app: my-api-cicd
+      app: my-api-cicd             # Selecciona pods con esta etiqueta
+  
+  # ============================================
+  # Template del Pod
+  # ============================================
+  # Define cómo deben ser los pods creados
   template:
     metadata:
       labels:
-        app: my-api-cicd
+        app: my-api-cicd           # Etiqueta que se asigna a cada pod
+    
     spec:
+      # ============================================
+      # Definición de contenedores
+      # ============================================
       containers:
-      - name: my-api-cicd
+      - name: my-api-cicd          # Nombre del contenedor dentro del pod
+        
+        # Imagen Docker a usar
+        # Esta imagen se actualiza automáticamente cuando hay nuevos despliegues
         image: moids77/my-api-cicd:latest
+        
+        # ========================================
+        # Puertos expuestos
+        # ========================================
         ports:
-        - containerPort: 3000
-          name: http
+        - containerPort: 3000      # Puerto que escucha la aplicación
+          name: http               # Nombre descriptivo del puerto
+        
+        # ========================================
+        # Variables de entorno
+        # ========================================
         env:
-        - name: PORT
+        - name: PORT               # Puerto en el que escucha la app
           value: "3000"
-        - name: NODE_ENV
+        
+        - name: NODE_ENV           # Entorno de ejecución (producción)
           value: "production"
+        
+        # ========================================
+        # Recursos (CPU y Memoria)
+        # ========================================
         resources:
+          # Requests: Recursos mínimos garantizados
+          # Kubernetes usará estos valores para decidir en qué nodo colocar el pod
           requests:
-            memory: "128Mi"
-            cpu: "100m"
+            memory: "128Mi"        # 128 megabytes de RAM mínimos
+            cpu: "100m"            # 100 millicores (0.1 CPU) mínimos
+          
+          # Limits: Recursos máximos permitidos
+          # Si el pod intenta usar más, será throttled (CPU) o killed (memoria)
           limits:
-            memory: "256Mi"
-            cpu: "200m"
+            memory: "256Mi"        # 256 megabytes de RAM máximos
+            cpu: "200m"            # 200 millicores (0.2 CPU) máximos
+        
+        # ========================================
+        # Liveness Probe (Prueba de vida)
+        # ========================================
+        # Kubernetes usa esto para saber si el contenedor está vivo
+        # Si falla, Kubernetes reinicia el contenedor
         livenessProbe:
           httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 3
+            path: /health          # Endpoint de health check
+            port: 3000             # Puerto donde hacer la petición
+          initialDelaySeconds: 10  # Esperar 10s después de iniciar
+          periodSeconds: 10        # Verificar cada 10 segundos
+          timeoutSeconds: 3        # Timeout de 3 segundos por petición
+          failureThreshold: 3      # Reiniciar después de 3 fallos consecutivos
+        
+        # ========================================
+        # Readiness Probe (Prueba de disponibilidad)
+        # ========================================
+        # Kubernetes usa esto para saber si el contenedor está listo
+        # para recibir tráfico. Si falla, se quita del Service
+        # pero NO se reinicia el contenedor
         readinessProbe:
           httpGet:
-            path: /health
-            port: 3000
-          initialDelaySeconds: 5
-          periodSeconds: 5
-          timeoutSeconds: 3
-          failureThreshold: 3
+            path: /health          # Endpoint de health check
+            port: 3000             # Puerto donde hacer la petición
+          initialDelaySeconds: 5   # Esperar 5s después de iniciar
+          periodSeconds: 5         # Verificar cada 5 segundos
+          timeoutSeconds: 3        # Timeout de 3 segundos por petición
+          failureThreshold: 3      # Marcar como "no ready" después de 3 fallos

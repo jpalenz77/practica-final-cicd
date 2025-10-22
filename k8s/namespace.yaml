@@ -1,6 +1,35 @@
+# ============================================
+# Namespace de Kubernetes
+# ============================================
+# Un Namespace proporciona aislamiento lógico entre recursos
+# Permite organizar recursos y aplicar políticas específicas
+
 apiVersion: v1
 kind: Namespace
+
+# ============================================
+# Metadatos del Namespace
+# ============================================
 metadata:
-  name: my-api-cicd
+  name: my-api-cicd                # Nombre del namespace
+  
   labels:
-    name: my-api-cicd
+    name: my-api-cicd              # Etiqueta identificativa
+
+# ============================================
+# Propósito de los Namespaces:
+# ============================================
+# 1. ORGANIZACIÓN: Agrupar recursos relacionados
+#    - Todos los recursos de esta app están en el mismo namespace
+#
+# 2. AISLAMIENTO: Los recursos en un namespace no afectan a otros
+#    - Evita conflictos de nombres entre aplicaciones
+#
+# 3. CONTROL DE ACCESO: Se pueden aplicar políticas RBAC por namespace
+#    - Ejemplo: Solo ciertos usuarios pueden ver este namespace
+#
+# 4. CUOTAS DE RECURSOS: Limitar recursos por namespace
+#    - Ejemplo: Este namespace puede usar máximo 4GB de RAM
+#
+# 5. FACILITA EL BORRADO: Eliminar el namespace borra todo su contenido
+#    - Útil para limpiar entornos de desarrollo/testing

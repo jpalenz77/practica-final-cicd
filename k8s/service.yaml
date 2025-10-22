@@ -1,17 +1,62 @@
+# ============================================
+# Service de Kubernetes - Exposición de la API
+# ============================================
+# Un Service proporciona una forma estable de acceder a los Pods
+# Actúa como balanceador de carga entre todas las réplicas
+
 apiVersion: v1
 kind: Service
+
+# ============================================
+# Metadatos del Service
+# ============================================
 metadata:
-  name: my-api-cicd
-  namespace: my-api-cicd
+  name: my-api-cicd                # Nombre del service
+  namespace: my-api-cicd           # Namespace donde se crea
   labels:
-    app: my-api-cicd
+    app: my-api-cicd               # Etiqueta identificativa
+
+# ============================================
+# Especificación del Service
+# ============================================
 spec:
+  # Tipo de Service
+  # NodePort: Expone el service en un puerto de cada nodo del cluster
+  # Esto permite acceder desde fuera del cluster usando <NodeIP>:<NodePort>
+  # Otras opciones: ClusterIP (solo interno), LoadBalancer (cloud)
   type: NodePort
+  
+  # ============================================
+  # Configuración de puertos
+  # ============================================
   ports:
-  - port: 3000
-    targetPort: 3000
-    nodePort: 30080
-    protocol: TCP
-    name: http
+  - port: 3000                     # Puerto del Service dentro del cluster
+                                   # Otros pods pueden acceder con: my-api-cicd:3000
+    
+    targetPort: 3000               # Puerto del contenedor al que redirigir
+                                   # Debe coincidir con el containerPort del Deployment
+    
+    nodePort: 30080                # Puerto expuesto en cada nodo del cluster
+                                   # Rango válido: 30000-32767
+                                   # Accesible desde: http://localhost:30080
+    
+    protocol: TCP                  # Protocolo de transporte (TCP o UDP)
+    
+    name: http                     # Nombre descriptivo del puerto
+
+  # ============================================
+  # Selector de Pods
+  # ============================================
+  # Define a qué pods redirige el tráfico este Service
+  # Debe coincidir con las etiquetas de los pods del Deployment
   selector:
     app: my-api-cicd
+  
+  # ============================================
+  # Funcionamiento del Service:
+  # ============================================
+  # 1. El tráfico llega a http://localhost:30080 (NodePort)
+  # 2. Kubernetes lo redirige al Service en el puerto 3000
+  # 3. El Service balancea la carga entre los 2 pods disponibles
+  # 4. Cada pod recibe el tráfico en su puerto 3000 (targetPort)
+  # 5. La aplicación procesa la petición y responde

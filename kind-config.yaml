@@ -1,21 +1,105 @@
+# ============================================
+# Configuración de Kind (Kubernetes in Docker)
+# ============================================
+# Kind crea un cluster de Kubernetes local usando contenedores Docker
+# Es ideal para desarrollo, testing y aprendizaje
+
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
+
+# ============================================
+# Nombre del cluster
+# ============================================
+# Este nombre se usará para identificar el cluster
+# Útil cuando tienes múltiples clusters locales
 name: my-api-cicd-cluster
+
+# ============================================
+# Configuración de nodos
+# ============================================
+# Define los nodos que formarán el cluster
 nodes:
-- role: control-plane
+- role: control-plane                         # Nodo maestro (controla el cluster)
+  
+  # ==========================================
+  # Configuración de Kubeadm
+  # ==========================================
+  # Kubeadm es la herramienta que inicializa el cluster de Kubernetes
   kubeadmConfigPatches:
   - |
     kind: InitConfiguration
     nodeRegistration:
       kubeletExtraArgs:
+        # Etiqueta especial para indicar que este nodo puede ejecutar Ingress Controllers
+        # Aunque no usamos Ingress en esta práctica, lo dejamos para futuras expansiones
         node-labels: "ingress-ready=true"
+  
+  # ==========================================
+  # Mapeo de puertos (Port Forwarding)
+  # ==========================================
+  # Estos mapeos permiten acceder a servicios del cluster desde el host (tu máquina)
+  # Formato: containerPort (puerto en el nodo K8s) → hostPort (puerto en tu máquina)
   extraPortMappings:
-  - containerPort: 30080
-    hostPort: 30080
+  
+  # ------------------------------------------
+  # Puerto 30080: Aplicación API
+  # ------------------------------------------
+  - containerPort: 30080                      # Puerto NodePort de nuestra aplicación
+    hostPort: 30080                           # Accesible en: http://localhost:30080
     protocol: TCP
-  - containerPort: 30443
-    hostPort: 30443
+    # Este mapeo permite acceder a la API desde el navegador/curl
+  
+  # ------------------------------------------
+  # Puerto 30443: HTTPS (reservado para futuro)
+  # ------------------------------------------
+  - containerPort: 30443                      # Puerto para servicios HTTPS
+    hostPort: 30443                           # Accesible en: https://localhost:30443
     protocol: TCP
-  - containerPort: 30000
-    hostPort: 30000
+    # Útil si en el futuro añadimos un Ingress Controller con TLS
+  
+  # ------------------------------------------
+  # Puerto 30000: ArgoCD UI
+  # ------------------------------------------
+  - containerPort: 30000                      # Puerto para acceder a ArgoCD
+    hostPort: 30000                           # Accesible en: https://localhost:30000
     protocol: TCP
+    # Permite acceder a la interfaz web de ArgoCD para gestionar despliegues
+
+# ============================================
+# Uso de este archivo:
+# ============================================
+# Crear cluster:
+#   kind create cluster --config kind-config.yaml
+#
+# Ver clusters existentes:
+#   kind get clusters
+#
+# Eliminar cluster:
+#   kind delete cluster --name my-api-cicd-cluster
+#
+# Ver nodos:
+#   kubectl get nodes
+
+# ============================================
+# ¿Por qué Kind?
+# ============================================
+# ✅ RÁPIDO: Crea un cluster completo en 1-2 minutos
+# ✅ LIGERO: Usa contenedores Docker en lugar de VMs
+# ✅ REALISTA: Es Kubernetes real, no una simulación
+# ✅ REPRODUCIBLE: La configuración está versionada
+# ✅ DESECHABLE: Fácil de crear y destruir para testing
+# ✅ AISLADO: No afecta a otros clusters o configuraciones
+
+# ============================================
+# Arquitectura del cluster:
+# ============================================
+# Tu máquina (Host)
+#   └── Docker
+#       └── Contenedor Kind (Nodo Kubernetes)
+#           ├── API Server
+#           ├── Scheduler
+#           ├── Controller Manager
+#           ├── etcd
+#           └── Pods de la aplicación
+#               ├── my-api-cicd-pod-1
+#               └── my-api-cicd-pod-2
