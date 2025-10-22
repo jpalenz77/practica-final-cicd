@@ -513,7 +513,7 @@ El pipeline se ejecuta automáticamente en cada push y pull request.
 ┌─────────────────────────────────────────────────────────────┐
 │                        ArgoCD                               │
 ├─────────────────────────────────────────────────────────────┤
-│  1. Detecta cambio en repositorio (polling cada 3 min)     │
+│  1. Detecta cambio en repositorio (polling cada 3 min)      │
 │  2. Compara estado actual vs deseado                        │
 │  3. Sincroniza automáticamente                              │
 │  4. Despliega en Kubernetes                                 │
