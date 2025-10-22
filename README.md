@@ -513,7 +513,7 @@ El pipeline se ejecuta automáticamente en cada push y pull request.
 ┌─────────────────────────────────────────────────────────────┐
 │                        ArgoCD                               │
 ├─────────────────────────────────────────────────────────────┤
-│  1. Detecta cambio en repositorio (polling cada 3 min)      │
+│  1. Detecta cambio en repositorio (polling cada 3 min)     │
 │  2. Compara estado actual vs deseado                        │
 │  3. Sincroniza automáticamente                              │
 │  4. Despliega en Kubernetes                                 │
@@ -877,7 +877,7 @@ kind create cluster --config kind-config.yaml
 
 ## 👥 Autor
 
-**José Pablo Alenza**
+**Jose Maria Palenzuela Plaza**
 - GitHub: [@jpalenz77](https://github.com/jpalenz77)
 - Proyecto: [practica-final-cicd](https://github.com/jpalenz77/practica-final-cicd)
 

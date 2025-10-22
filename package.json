@@ -12,7 +12,7 @@
     "lint:fix": "eslint src/**/*.js tests/**/*.js --fix"
   },
   "keywords": ["api", "rest", "cicd", "nodejs", "express", "kubernetes", "argocd"],
-  "author": "José Pablo Alenza",
+  "author": "Jose Maria Palenzuela Plaza",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2",
