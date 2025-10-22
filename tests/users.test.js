@@ -155,6 +155,24 @@ describe('API Endpoints', () => {
         expect(res.statusCode).toBe(400);
         expect(res.body).toHaveProperty('error');
       });
+
+      it('debería devolver 400 si falta el nombre', async () => {
+        const res = await request(app)
+          .post('/api/users')
+          .send({ email: 'test@example.com' });  // Falta el nombre
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error');
+      });
+
+      it('debería devolver 400 si no se envían datos', async () => {
+        const res = await request(app)
+          .post('/api/users')
+          .send({});  // Sin datos
+
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty('error');
+      });
     });
 
     // ========================================
@@ -179,6 +197,34 @@ describe('API Endpoints', () => {
 
         expect(res.statusCode).toBe(200);
         expect(res.body.name).toBe(updates.name);
+      });
+
+      it('debería actualizar solo el email', async () => {
+        const updates = {
+          email: 'nuevo@example.com'
+        };
+
+        const res = await request(app)
+          .put('/api/users/1')
+          .send(updates);
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.email).toBe(updates.email);
+      });
+
+      it('debería actualizar nombre y email', async () => {
+        const updates = {
+          name: 'Nuevo Nombre',
+          email: 'nuevo2@example.com'
+        };
+
+        const res = await request(app)
+          .put('/api/users/1')
+          .send(updates);
+
+        expect(res.statusCode).toBe(200);
+        expect(res.body.name).toBe(updates.name);
+        expect(res.body.email).toBe(updates.email);
       });
 
       /**
