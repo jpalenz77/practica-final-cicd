@@ -494,7 +494,7 @@ El pipeline se ejecuta automáticamente en cada push y pull request.
 ┌─────────────────────────────────────────────────────────────┐
 │                        ArgoCD                               │
 ├─────────────────────────────────────────────────────────────┤
-│  1. Detecta cambio en repositorio (polling cada 3 min)     │
+│  1. Detecta cambio en repositorio (polling cada 3 min)      │
 │  2. Compara estado actual vs deseado                        │
 │  3. Sincroniza automáticamente                              │
 │  4. Despliega en Kubernetes                                 │
@@ -676,9 +676,9 @@ kubectl logs -n my-api-cicd -l app=my-api-cicd --tail=50
        ↓
 ┌─────────────────────────────────────┐
 │       GitHub Actions                │
-│  ┌────────┐ ┌────────┐ ┌─────────┐ │
-│  │ Build  │ │ Test   │ │ Analyze │ │
-│  └────────┘ └────────┘ └─────────┘ │
+│  ┌────────┐ ┌────────┐ ┌─────────┐  │
+│  │ Build  │ │ Test   │ │ Analyze │  │
+│  └────────┘ └────────┘ └─────────┘  │
 └──────────────┬──────────────────────┘
                │
                ↓
@@ -715,13 +715,13 @@ practica-final-cicd/
 │       └── ci-cd.yml              # Pipeline de GitHub Actions
 ├── argocd/
 │   ├── application.yaml           # Aplicación de ArgoCD
-│   └── README.md                  # Documentación de ArgoCD
+│   
 ├── k8s/                           # Manifiestos de Kubernetes
 │   ├── namespace.yaml             # Namespace
 │   ├── deployment.yaml            # Deployment con 2 réplicas
 │   ├── service.yaml               # Service NodePort
 │   ├── kustomization.yaml         # Kustomize config
-│   └── README.md                  # Documentación K8s
+│   
 ├── src/                           # Código fuente
 │   ├── app.js                     # Configuración de Express
 │   ├── server.js                  # Punto de entrada
