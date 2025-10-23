@@ -1,7 +1,6 @@
 # API REST con CI/CD Completo
 
 [![CI/CD Pipeline](https://github.com/jpalenz77/practica-final-cicd/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/jpalenz77/practica-final-cicd/actions)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=jpalenz77_practica-final-cicd&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=jpalenz77_practica-final-cicd)
 
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Express](https://img.shields.io/badge/Express-4.18+-000000?style=flat-square&logo=express&logoColor=white)](https://expressjs.com/)
