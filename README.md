@@ -466,31 +466,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 ### 6. Crear aplicación en ArgoCD
 
-#### Opción A: Desde la UI (Visual)
-
-1. Ve a la página principal de ArgoCD
-2. Clic en **+ NEW APP**
-3. Configurar:
-
-**GENERAL:**
-- **Application Name**: `my-api-cicd`
-- **Project**: `default`
-- **Sync Policy**: `Automatic`
-  - ✅ **PRUNE RESOURCES**
-  - ✅ **SELF HEAL**
-
-**SOURCE:**
-- **Repository URL**: `https://github.com/jpalenz77/practica-final-cicd`
-- **Revision**: `main`
-- **Path**: `k8s`
-
-**DESTINATION:**
-- **Cluster URL**: `https://kubernetes.default.svc`
-- **Namespace**: `my-api-cicd`
-
-4. Clic en **CREATE**
-
-#### Opción B: Desde el archivo (GitOps completo)
+Desde el archivo 
 
 ```bash
 # Aplicar la aplicación de ArgoCD desde el repositorio
