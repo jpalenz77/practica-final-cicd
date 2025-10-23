@@ -35,8 +35,6 @@ API REST desarrollada con Node.js y Express que implementa un pipeline completo 
 - [🏗️ Arquitectura](#️-arquitectura)
 - [📁 Estructura del Proyecto](#-estructura-del-proyecto)
 - [🔧 Troubleshooting](#-troubleshooting)
-- [🔗 Enlaces Importantes](#-enlaces-importantes)
-- [👥 Autor](#-autor)
 
 ---
 
