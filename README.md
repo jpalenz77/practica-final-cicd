@@ -832,47 +832,6 @@ kind create cluster --config kind-config.yaml
 
 ---
 
-## 🔗 Enlaces Importantes
-
-### Repositorios y Registros
-- **GitHub Repository**: https://github.com/jpalenz77/practica-final-cicd
-- **Docker Hub**: https://hub.docker.com/r/moids77/my-api-cicd
-
-### Análisis y Calidad
-- **SonarCloud**: https://sonarcloud.io/project/overview?id=jpalenz77_practica-final-cicd
-- **Snyk**: Ver en logs de GitHub Actions
-
-### Interfaces Web
-- **GitHub Actions**: https://github.com/jpalenz77/practica-final-cicd/actions
-- **ArgoCD UI**: https://localhost:30000 (local)
-
-### Documentación
-- **GitHub Actions**: https://docs.github.com/en/actions
-- **SonarCloud**: https://docs.sonarcloud.io/
-- **Snyk**: https://docs.snyk.io/
-- **Kubernetes**: https://kubernetes.io/docs/
-- **ArgoCD**: https://argo-cd.readthedocs.io/
-- **Kind**: https://kind.sigs.k8s.io/
-- **Docker**: https://docs.docker.com/
-- **Express**: https://expressjs.com/
-- **Jest**: https://jestjs.io/
-
----
-
-## 👥 Autor
-
-**Jose Maria Palenzuela Plaza**
-- GitHub: [@jpalenz77](https://github.com/jpalenz77)
-- Proyecto: [practica-final-cicd](https://github.com/jpalenz77/practica-final-cicd)
-
----
-
-## 📝 Licencia
-
-ISC
-
----
-
 ## 🎉 ¡Felicidades!
 
 Si has llegado hasta aquí y todo funciona, tienes:
