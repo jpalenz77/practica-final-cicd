@@ -55,13 +55,11 @@ Aplicación API REST desarrollada con Node.js y Express que implementa un pipeli
 ![GitHub Actions - Vista General](capturas/01.png)
 *Dashboard de GitHub Actions mostrando todos los workflows ejecutados exitosamente*
 
-#### Job: Build and Test
+#### Job: Construcción, Tests y Análisis de calidad
 ![GitHub Actions - Build and Test](capturas/02.png)
-*Detalle del job de construcción, tests, linting, SonarCloud y Snyk*
 
-#### Job: Build Docker
+#### Job: Construcción y publicación de imagen Docker
 ![GitHub Actions - Docker Build](capturas/03.png)
-*Construcción y publicación de la imagen Docker en Docker Hub*
 
 #### Artifacts Generados
 ![GitHub Actions - Artifacts](capturas/04.png)
@@ -87,15 +85,12 @@ Aplicación API REST desarrollada con Node.js y Express que implementa un pipeli
 
 #### Health Check
 ![Health Check](capturas/05.png)
-*Respuesta del endpoint de health check mostrando el estado de la aplicación*
 
 #### API Endpoints
 ![API Endpoints](capturas/06.png)
-*Endpoint de usuarios devolviendo la lista en formato JSON*
 
 #### Recursos en Kubernetes
 ![Kubernetes Resources](capturas/07.png)
-*Pods, services y deployments corriendo en el namespace my-api-cicd*
 
 ---
 
@@ -148,18 +143,8 @@ Aplicación API REST desarrollada con Node.js y Express que implementa un pipeli
 ![Snyk - Dashboard](capturas/15.png)
 *Análisis de vulnerabilidades en las dependencias del proyecto*
 
----
+⚠️ Nota sobre Snyk: Durante el desarrollo de esta práctica se realizaron múltiples pruebas y análisis con Snyk, lo que agotó los tests gratuitos disponibles. Por este motivo, no se incluyen capturas adicionales de análisis detallados de dependencias o vulnerabilidades específicas. El dashboard mostrado corresponde al último análisis realizado antes de alcanzar el límite de la cuenta gratuita.
 
-### 10. Video Explicativo
-🎥 **YouTube:** [Enlace al video - Próximamente]
-
-**Contenido del video:**
-- Introducción al proyecto
-- Demostración del código fuente
-- Pipeline CI/CD en acción
-- Análisis de calidad (SonarCloud + Snyk)
-- Despliegue con Kubernetes y ArgoCD
-- Demo del flujo GitOps completo
 
 ---
 
