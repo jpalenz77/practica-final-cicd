@@ -1,4 +1,4 @@
-# API REST con CI/CD Completo
+# Aplicación con API REST con CI/CD Completo
 
 [![CI/CD Pipeline](https://github.com/jpalenz77/practica-final-cicd/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/jpalenz77/practica-final-cicd/actions)
 
@@ -14,12 +14,13 @@
 [![Jest](https://img.shields.io/badge/Jest-C21325?style=flat-square&logo=jest&logoColor=white)](https://jestjs.io/)
 [![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=flat-square&logo=eslint&logoColor=white)](https://eslint.org/)
 
-API REST desarrollada con Node.js y Express que implementa un pipeline completo de CI/CD con despliegue automático en Kubernetes usando ArgoCD y prácticas GitOps.
+Aplicación API REST desarrollada con Node.js y Express que implementa un pipeline completo de CI/CD con despliegue automático en Kubernetes usando ArgoCD y prácticas GitOps.
 
 ---
 
 ## 📋 Tabla de Contenidos
 
+- [Entregables](#-entregables)
 - [🚀 Características](#-características)
 - [🔧 Requisitos Previos](#-requisitos-previos)
 - [⚙️ Instalación y Configuración](#️-instalación-y-configuración)
@@ -34,6 +35,131 @@ API REST desarrollada con Node.js y Express que implementa un pipeline completo 
 - [🏗️ Arquitectura](#️-arquitectura)
 - [📁 Estructura del Proyecto](#-estructura-del-proyecto)
 - [🔧 Troubleshooting](#-troubleshooting)
+
+---
+
+## Entregables
+
+### 1. Repositorio de GitHub
+📁 **Enlace:** https://github.com/jpalenz77/practica-final-cicd
+
+### 2. Repositorio de Artefactos (Docker Hub)
+🐳 **Enlace:** https://hub.docker.com/r/moids77/my-api-cicd
+
+### 3. Fichero de Configuración del Pipeline
+📄 **Archivo:** [.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml)
+
+### 4. Screenshots del Pipeline CI/CD
+
+#### Vista General de Workflows
+![GitHub Actions - Vista General](capturas/01.png)
+*Dashboard de GitHub Actions mostrando todos los workflows ejecutados exitosamente*
+
+#### Job: Build and Test
+![GitHub Actions - Build and Test](capturas/02.png)
+*Detalle del job de construcción, tests, linting, SonarCloud y Snyk*
+
+#### Job: Build Docker
+![GitHub Actions - Docker Build](capturas/03.png)
+*Construcción y publicación de la imagen Docker en Docker Hub*
+
+#### Artifacts Generados
+![GitHub Actions - Artifacts](capturas/04.png)
+*Artefactos generados incluyendo el informe de cobertura*
+
+---
+
+### 5. Manifiestos de Kubernetes
+📁 **Carpeta:** [k8s/](k8s/)
+- [namespace.yaml](k8s/namespace.yaml) - Namespace de la aplicación
+- [deployment.yaml](k8s/deployment.yaml) - Deployment con 2 réplicas
+- [service.yaml](k8s/service.yaml) - Service tipo NodePort
+- [kustomization.yaml](k8s/kustomization.yaml) - Configuración de Kustomize
+
+---
+
+### 6. Aplicación Desplegada
+
+**Endpoints disponibles:**
+- Health Check: http://localhost:30080/health
+- API Info: http://localhost:30080/
+- Usuarios: http://localhost:30080/api/users
+
+#### Health Check
+![Health Check](capturas/05.png)
+*Respuesta del endpoint de health check mostrando el estado de la aplicación*
+
+#### API Endpoints
+![API Endpoints](capturas/06.png)
+*Endpoint de usuarios devolviendo la lista en formato JSON*
+
+#### Recursos en Kubernetes
+![Kubernetes Resources](capturas/07.png)
+*Pods, services y deployments corriendo en el namespace my-api-cicd*
+
+---
+
+### 7. Proyecto en ArgoCD
+
+**Acceso:** https://localhost:30000  
+**Usuario:** admin
+
+#### Dashboard Principal
+![ArgoCD - Dashboard](capturas/08.png)
+*Dashboard de ArgoCD mostrando la aplicación en estado Synced y Healthy*
+
+#### Diagrama de Recursos
+![ArgoCD - Diagrama de Recursos](capturas/09.png)
+*Vista del diagrama con todos los recursos de Kubernetes gestionados por ArgoCD*
+
+#### Configuración de la Aplicación
+![ArgoCD - Configuración](capturas/10.png)
+*Detalles de la configuración: source repository, path y destination*
+
+#### Política de Sincronización
+![ArgoCD - Sync Policy](capturas/11.png)
+*Política de sincronización automática con prune y self-heal activados*
+
+---
+
+### 8. Proyecto en SonarCloud
+
+🔗 **Enlace:** https://sonarcloud.io/project/overview?id=jpalenz77_practica-final-cicd
+
+#### Dashboard Principal
+![SonarCloud - Dashboard](capturas/12.png)
+*Métricas principales: Quality Gate, Coverage, Bugs, Vulnerabilities y Code Smells*
+
+#### Cobertura de Código
+![SonarCloud - Cobertura](capturas/13.png)
+*Desglose de la cobertura de tests por archivo*
+
+#### Quality Gate Status
+![SonarCloud - Quality Gate](capturas/14.png)
+*Estado del Quality Gate mostrando todas las condiciones aprobadas*
+
+---
+
+### 9. Proyecto en Snyk
+
+🔗 **Enlace:** https://app.snyk.io
+
+#### Dashboard de Vulnerabilidades
+![Snyk - Dashboard](capturas/15.png)
+*Análisis de vulnerabilidades en las dependencias del proyecto*
+
+---
+
+### 10. Video Explicativo
+🎥 **YouTube:** [Enlace al video - Próximamente]
+
+**Contenido del video:**
+- Introducción al proyecto
+- Demostración del código fuente
+- Pipeline CI/CD en acción
+- Análisis de calidad (SonarCloud + Snyk)
+- Despliegue con Kubernetes y ArgoCD
+- Demo del flujo GitOps completo
 
 ---
 
@@ -842,128 +968,3 @@ Si has llegado hasta aquí y todo funciona, tienes:
 ✅ Monitoreo con ArgoCD  
 
 **¡Has implementado un flujo DevOps profesional completo!** 🚀
-
-Esta sección contiene todos los entregables solicitados para la práctica de CI/CD.
-
-### 1. Repositorio de GitHub
-📁 **Enlace:** https://github.com/jpalenz77/practica-final-cicd
-
-### 2. Repositorio de Artefactos (Docker Hub)
-🐳 **Enlace:** https://hub.docker.com/r/moids77/my-api-cicd
-
-### 3. Fichero de Configuración del Pipeline
-📄 **Archivo:** [.github/workflows/ci-cd.yml](.github/workflows/ci-cd.yml)
-
-### 4. Screenshots del Pipeline CI/CD
-
-#### Vista General de Workflows
-![GitHub Actions - Vista General](capturas/01.png)
-*Dashboard de GitHub Actions mostrando todos los workflows ejecutados exitosamente*
-
-#### Job: Build and Test
-![GitHub Actions - Build and Test](capturas/02.png)
-*Detalle del job de construcción, tests, linting, SonarCloud y Snyk*
-
-#### Job: Build Docker
-![GitHub Actions - Docker Build](capturas/03.png)
-*Construcción y publicación de la imagen Docker en Docker Hub*
-
-#### Artifacts Generados
-![GitHub Actions - Artifacts](capturas/04.png)
-*Artefactos generados incluyendo el informe de cobertura*
-
----
-
-### 5. Manifiestos de Kubernetes
-📁 **Carpeta:** [k8s/](k8s/)
-- [namespace.yaml](k8s/namespace.yaml) - Namespace de la aplicación
-- [deployment.yaml](k8s/deployment.yaml) - Deployment con 2 réplicas
-- [service.yaml](k8s/service.yaml) - Service tipo NodePort
-- [kustomization.yaml](k8s/kustomization.yaml) - Configuración de Kustomize
-
----
-
-### 6. Aplicación Desplegada
-
-**Endpoints disponibles:**
-- Health Check: http://localhost:30080/health
-- API Info: http://localhost:30080/
-- Usuarios: http://localhost:30080/api/users
-
-#### Health Check
-![Health Check](capturas/05.png)
-*Respuesta del endpoint de health check mostrando el estado de la aplicación*
-
-#### API Endpoints
-![API Endpoints](capturas/06.png)
-*Endpoint de usuarios devolviendo la lista en formato JSON*
-
-#### Recursos en Kubernetes
-![Kubernetes Resources](capturas/07.png)
-*Pods, services y deployments corriendo en el namespace my-api-cicd*
-
----
-
-### 7. Proyecto en ArgoCD
-
-**Acceso:** https://localhost:30000  
-**Usuario:** admin
-
-#### Dashboard Principal
-![ArgoCD - Dashboard](capturas/08.png)
-*Dashboard de ArgoCD mostrando la aplicación en estado Synced y Healthy*
-
-#### Diagrama de Recursos
-![ArgoCD - Diagrama de Recursos](capturas/09.png)
-*Vista del diagrama con todos los recursos de Kubernetes gestionados por ArgoCD*
-
-#### Configuración de la Aplicación
-![ArgoCD - Configuración](capturas/10.png)
-*Detalles de la configuración: source repository, path y destination*
-
-#### Política de Sincronización
-![ArgoCD - Sync Policy](capturas/11.png)
-*Política de sincronización automática con prune y self-heal activados*
-
----
-
-### 8. Proyecto en SonarCloud
-
-🔗 **Enlace:** https://sonarcloud.io/project/overview?id=jpalenz77_practica-final-cicd
-
-#### Dashboard Principal
-![SonarCloud - Dashboard](capturas/12.png)
-*Métricas principales: Quality Gate, Coverage, Bugs, Vulnerabilities y Code Smells*
-
-#### Cobertura de Código
-![SonarCloud - Cobertura](capturas/13.png)
-*Desglose de la cobertura de tests por archivo*
-
-#### Quality Gate Status
-![SonarCloud - Quality Gate](capturas/14.png)
-*Estado del Quality Gate mostrando todas las condiciones aprobadas*
-
----
-
-### 9. Proyecto en Snyk
-
-🔗 **Enlace:** https://app.snyk.io
-
-#### Dashboard de Vulnerabilidades
-![Snyk - Dashboard](capturas/15.png)
-*Análisis de vulnerabilidades en las dependencias del proyecto*
-
----
-
-### 10. Video Explicativo
-🎥 **YouTube:** [Enlace al video - Próximamente]
-
-**Contenido del video:**
-- Introducción al proyecto
-- Demostración del código fuente
-- Pipeline CI/CD en acción
-- Análisis de calidad (SonarCloud + Snyk)
-- Despliegue con Kubernetes y ArgoCD
-- Demo del flujo GitOps completo
-
----
