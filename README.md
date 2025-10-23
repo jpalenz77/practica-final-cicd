@@ -148,6 +148,12 @@ Aplicación API REST desarrollada con Node.js y Express que implementa un pipeli
 
 ---
 
+### 10. Video de YouTube
+
+🔗 **Enlace:** https://youtu.be/igwLN63fmAo
+
+---
+
 ## 🚀 Características
 
 - ✅ API REST completa con CRUD de usuarios
