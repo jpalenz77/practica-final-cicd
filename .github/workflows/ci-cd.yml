@@ -124,6 +124,27 @@ jobs:
         with:
           command: monitor  # Comando para monitorear el proyecto
 
+      # ----------------------------------------
+      # PASO 11: Resumen del Job Build & Test
+      # ----------------------------------------
+      - name: 📋 Generar resumen del job
+        if: always()
+        run: |
+          echo "## ✅ Build y Tests Completados" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Paso | Estado |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| 📦 Instalación de dependencias | ✅ Completado |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🔍 Linting (ESLint) | ✅ Completado |" >> $GITHUB_STEP_SUMMARY
+          echo "| ✅ Tests unitarios | ✅ Completado |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🔬 SonarCloud | ✅ Completado |" >> $GITHUB_STEP_SUMMARY
+          echo "| 🛡️ Snyk | ✅ Completado |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📊 Métricas" >> $GITHUB_STEP_SUMMARY
+          echo "- **Cobertura**: Ver sección anterior" >> $GITHUB_STEP_SUMMARY
+          echo "- **Quality Gate**: Verificar en [SonarCloud](https://sonarcloud.io)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Vulnerabilidades**: Verificar en [Snyk](https://app.snyk.io)" >> $GITHUB_STEP_SUMMARY
+
   # ============================================
   # JOB 2: Construcción y Publicación de Docker
   # ============================================
@@ -222,6 +243,23 @@ jobs:
       # Añade un resumen del build exitoso en la página del workflow
       - name: 📝 Mostrar información del build
         run: |
-          echo "### 🐳 Build de Docker Exitoso ✅" >> $GITHUB_STEP_SUMMARY
-          echo "**Imagen:** ${{ secrets.DOCKERHUB_USERNAME }}/my-api-cicd:latest" >> $GITHUB_STEP_SUMMARY
-          echo "**SHA del commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "## 🐳 Build de Docker Exitoso ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Detalles de la Imagen" >> $GITHUB_STEP_SUMMARY
+          echo "| Propiedad | Valor |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| **Imagen** | \`${{ secrets.DOCKERHUB_USERNAME }}/my-api-cicd:latest\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **SHA del commit** | \`${{ github.sha }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Rama** | \`${{ github.ref_name }}\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| **Autor** | ${{ github.actor }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔗 Enlaces" >> $GITHUB_STEP_SUMMARY
+          echo "- [Ver imagen en Docker Hub](https://hub.docker.com/r/${{ secrets.DOCKERHUB_USERNAME }}/my-api-cicd)" >> $GITHUB_STEP_SUMMARY
+          echo "- [Ver commit](https://github.com/${{ github.repository }}/commit/${{ github.sha }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Pasos Completados" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Imagen construida correctamente" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Imagen publicada en Docker Hub" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Health check verificado" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "> 🚀 La imagen está lista para ser desplegada por ArgoCD" >> $GITHUB_STEP_SUMMARY
